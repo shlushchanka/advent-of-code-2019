@@ -1,7 +1,8 @@
 def fuel_for_mass(module_mass):
-  return sum(fixed_point_generator(raw_fuel_for_mass, module_mass))
+  return sum(fixed_point_generator(raw_fuel_for_mass, module_mass)) - module_mass
 
 def fixed_point_generator(f, x): 
+  yield x
   next_x = f(x)
   while next_x != x:
     yield next_x
