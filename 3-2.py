@@ -39,10 +39,9 @@ def iterate(point_to_steps, initial_position, direction, distance):
     col = next_col
   return (row, col)
 
-def visited_points(origin, wire_string):
+def point_to_steps(origin, wire_string):
   wire = parse_wire_string(wire_string)
-  point_to_steps = {}
-  point_to_steps[origin] = 0
+  point_to_steps = { origin : 0}
   current_position = origin
   for w in wire:
     (direction, distance) = w
@@ -51,8 +50,8 @@ def visited_points(origin, wire_string):
 
 if __name__ == '__main__':
   origin = (0, 0)
-  first_steps = visited_points(origin, get_first_wire())
-  second_steps = visited_points(origin, get_second_wire())
+  first_steps = point_to_steps(origin, get_first_wire())
+  second_steps = point_to_steps(origin, get_second_wire())
 
   intersection = set(first_steps.keys()) & set(second_steps.keys())
   intersection.remove(origin)
