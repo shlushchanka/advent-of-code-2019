@@ -2,7 +2,6 @@ def fuel_for_mass(module_mass):
   return sum(fixed_point_generator(raw_fuel_for_mass, module_mass))
 
 def fixed_point_generator(f, x): 
-  yield x
   next_x = f(x)
   while next_x != x:
     yield next_x
@@ -10,7 +9,7 @@ def fixed_point_generator(f, x):
     next_x = f(x)
 
 def raw_fuel_for_mass(module_mass):
-  return module_mass / 3 - 2
+  return max(module_mass / 3 - 2, 0)
 
 # def get_input():
 #   import requests as r
