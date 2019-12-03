@@ -32,13 +32,16 @@ def find_verb_and_noun(input, target):
       opcodes = list(input)
       opcodes[1] = noun
       opcodes[2] = verb
-      try:
-        result = run(opcodes)
-        if result == target:
-          return build_answer(noun, verb)
-      except Exception:
-        continue
-  raise Exception('did not found answer')
+      if evaluates_to_target(opcodes, target):
+        return build_answer(noun, verb)
+  else:
+    raise Exception('did not found answer')
+
+def evaluates_to_target(opcodes, target):
+  try:
+    return run(opcodes) == target
+  except Exception:
+    return False
 
 def build_answer(noun, verb):
   return noun * 100 + verb
