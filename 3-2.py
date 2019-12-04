@@ -53,7 +53,7 @@ if __name__ == '__main__':
   first_steps = point_to_steps(origin, get_first_wire())
   second_steps = point_to_steps(origin, get_second_wire())
 
-  intersection = set(first_steps.keys()) & set(second_steps.keys())
+  intersection = first_steps.keys() & second_steps.keys()
   intersection.remove(origin)
 
   distance_function = lambda p: first_steps[p] + second_steps[p]

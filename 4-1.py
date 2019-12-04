@@ -9,7 +9,7 @@ def digits(n):
     while n > 0:
       last = n % 10
       digits.append(last)
-      n /= 10
+      n //= 10
     digits = list(reversed(digits))
     return digits  
 
@@ -20,10 +20,10 @@ def generate_valid_passwords_in_range(start, end):
       yield n
 
 def is_sorted(array):
-  return all(array[i] <= array[i + 1] for i in xrange(len(array) - 1))
+  return all(array[i] <= array[i + 1] for i in range(len(array) - 1))
 
 def has_two_equal_adjacent_digits(array):
-  return any(array[i] == array[i + 1] for i in xrange(len(array) - 1))
+  return any(array[i] == array[i + 1] for i in range(len(array) - 1))
 
 if __name__ == '__main__':
   (start, end) = get_input()

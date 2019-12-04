@@ -10,12 +10,7 @@ def fixed_point_generator(f, x):
     next_x = f(x)
 
 def raw_fuel_for_mass(module_mass):
-  return max(module_mass / 3 - 2, 0)
-
-# def get_input():
-#   import requests as r
-#   input_url = 'https://adventofcode.com/2019/day/1/input'
-#   r.get('https://adventofcode.com/2019/day/1/input')
+  return max(module_mass // 3 - 2, 0)
 
 def get_input():
   return [

@@ -1,12 +1,5 @@
-
-
 def fuel_for_mass(module_mass):
-  return module_mass / 3 - 2
-
-# def get_input():
-#   import requests as r
-#   input_url = 'https://adventofcode.com/2019/day/1/input'
-#   r.get('https://adventofcode.com/2019/day/1/input')
+  return module_mass // 3 - 2
 
 def get_input():
   return [

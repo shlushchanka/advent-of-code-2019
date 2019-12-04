@@ -55,7 +55,7 @@ if __name__ == '__main__':
   first_visited = visited_points(origin, get_first_wire())
   second_visited = visited_points(origin, get_second_wire())
 
-  intersection = first_visited.intersection(second_visited)
+  intersection = first_visited & second_visited
   intersection.remove(origin)
 
   p = min(intersection, key=manhattan_distance_from_origin)
