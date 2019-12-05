@@ -7,20 +7,20 @@ def run(opcodes, std_in, std_out):
   position = 0
   while opcodes[position] != HALT_OPCODE:
     (opcode, modes) = parse(opcodes[position])
+    arguments_start_address = position + 1
     if opcode == ADD_OPCODE:
-      process_opcode(lambda a, b: a + b, opcodes, position + 1, modes)
+      process_opcode(lambda a, b: a + b, opcodes, arguments_start_address, modes)
       position += 4
     elif opcode == MULTIPLY_OPCODE:
-      process_opcode(lambda a, b: a * b, opcodes, position + 1, modes)
+      process_opcode(lambda a, b: a * b, opcodes, arguments_start_address, modes)
       position += 4
     elif opcode == INPUT_OPCODE:
       in_value = std_in.pop(0)
-      in_address = opcodes[position + 1]
+      in_address = opcodes[arguments_start_address]
       opcodes[in_address] = in_value
       position += 2
     elif opcode == OUTPUT_OPCODE:
-      mode = read_mode(modes, 0)
-      out_value = read_argument(opcodes, position + 1, mode)
+      out_value = read_argument(opcodes, modes, arguments_start_address, 0)
       std_out.append(out_value)
       position += 2
     else:
@@ -39,10 +39,8 @@ def parse(instruction):
   return (opcode, modes)
 
 def process_opcode(operation, opcodes, arguments_position, modes):
-  first_mode = read_mode(modes, 0)
-  first_arg = read_argument(opcodes, arguments_position, first_mode)
-  second_mode = read_mode(modes, 1)
-  second_arg = read_argument(opcodes, arguments_position + 1, second_mode)
+  first_arg = read_argument(opcodes, modes, arguments_position, 0)
+  second_arg = read_argument(opcodes, modes, arguments_position, 1)
   result = operation(first_arg, second_arg)
   result_address = opcodes[arguments_position + 2]
   opcodes[result_address] = result
@@ -50,10 +48,12 @@ def process_opcode(operation, opcodes, arguments_position, modes):
 def read_mode(modes, index):
   return modes[index] if len(modes) > 0 and index < len(modes) else 0
 
-def read_argument(memory, address, mode):
-  address_value = memory[address]
+def read_argument(opcodes, modes, arguments_start_address, index):
+  mode = read_mode(modes, index)
+  address = arguments_start_address + index
+  address_value = opcodes[address]
   if mode == 0:
-    return memory[address_value]
+    return opcodes[address_value]
   else:
     return address_value
 
