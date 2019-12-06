@@ -17,15 +17,13 @@ def dfs(graph, vertex_to_subtree_size, v):
     size += vertex_to_subtree_size[child]
   vertex_to_subtree_size[v] = size
 
-
 def get_input(): 
-  graph = {}
+  from collections import defaultdict
+  graph = defaultdict(list)
   filename = '6.txt'
   lines = [line.rstrip('\n') for line in open(filename)]
   for line in lines:
     (parent, child) = line.split(')')
-    if parent not in graph:
-      graph[parent] = []
     graph[parent].append(child)
   return graph
 
