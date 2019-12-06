@@ -1,21 +1,17 @@
 def count_orbits(graph):
   vertex_to_subtree_size = {}
+  sum = 0
   for v in graph.keys():
-    if v not in vertex_to_subtree_size:
-      dfs(graph, vertex_to_subtree_size, v)
-  counts = vertex_to_subtree_size.values()
-  return sum(counts)
+    sum += dfs(graph, vertex_to_subtree_size, v)
+  return sum
 
 def dfs(graph, vertex_to_subtree_size, v):
-  if v not in graph:
-    vertex_to_subtree_size[v] = 0
-    return
-  size = len(graph[v])
-  for child in graph[v]:
-    if child not in vertex_to_subtree_size:
-      dfs(graph, vertex_to_subtree_size, child)
-    size += vertex_to_subtree_size[child]
-  vertex_to_subtree_size[v] = size
+  if v not in vertex_to_subtree_size:
+    size = len(graph[v])
+    for child in graph[v]:
+      size += dfs(graph, vertex_to_subtree_size, child)
+    vertex_to_subtree_size[v] = size
+  return vertex_to_subtree_size[v]
 
 def get_input(): 
   from collections import defaultdict
