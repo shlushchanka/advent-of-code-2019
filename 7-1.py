@@ -6,47 +6,22 @@ def get_input():
 def run_circuit(program, phases):
   previous_output = 0
   for i in range(len(phases)):
+    memory = program.copy()
     phase_setting = phases[i]
     std_in = [phase_setting, previous_output]
     std_out = []
-    computer = IntCodeComputer(program.copy(), std_in, std_out)
+    computer = IntCodeComputer(memory, std_in, std_out)
     computer.run()
     previous_output = std_out[0]
   return previous_output
 
-def find_max(program, phases_count):
+def find_max(program, phases):
   max_signal = 0
-  phases = list(range(phases_count))
-  has_next = True
-  while has_next:
-    max_signal = max(max_signal, run_circuit(program, phases))
-    has_next = next_permutation(phases)
+  from itertools import permutations
+  for permutation in permutations(phases):
+    max_signal = max(max_signal, run_circuit(program, permutation))
   return max_signal
-
-def next_permutation(values):
-  i = len(values) - 2
-  while i >= 0 and values[i] >= values[i + 1]:
-    i -= 1
-  if i == -1:
-    reverse(values, 0, len(values) - 1)
-    return False
-  else:
-    first_greater_index = len(values) - 1
-    while values[i] >= values[first_greater_index]:
-      first_greater_index -= 1
-    swap(values, i, first_greater_index)
-    reverse(values, i + 1, len(values) - 1)
-    return True
-
-def reverse(values, start, end):
-  while start < end:
-    swap(values, start, end)
-    start += 1
-    end -= 1
-  
-def swap(values, i, j):
-  values[i], values[j] = values[j], values[i]
 
 if __name__ == '__main__':
   program = get_input()
-  print(find_max(program, 5))
+  print(find_max(program, phases=list(range(5))))
