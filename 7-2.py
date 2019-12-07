@@ -27,11 +27,8 @@ def run_circuit(program, phases):
   return computers[-1].std_out[-1]
 
 def find_max(program, phases):
-  max_signal = 0
   from itertools import permutations
-  for permutation in permutations(phases):
-    max_signal = max(max_signal, run_circuit(program, permutation))
-  return max_signal
+  return max([run_circuit(program, permutation) for permutation in permutations(phases)])
 
 if __name__ == '__main__':
   program = get_input()
