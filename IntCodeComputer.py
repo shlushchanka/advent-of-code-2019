@@ -61,11 +61,6 @@ class IntCodeComputer:
   def is_waiting_for_input(self, value):
     self._is_waiting_for_input = value
 
-  from enum import Enum
-  class ReadMode(Enum):
-    POSITIONAL = 0
-    IMMIDIATE = 1
-
   def pop_parameter(self, read_mode):
     value_at_address = self.memory.read_and_move_pointer()
     if read_mode == ReadMode.IMMIDIATE:
