@@ -1,4 +1,4 @@
-def split_to_layers(image_data, widht, height):
+def split_to_1d_layers(image_data, widht, height):
   pixels_in_layer = widht * height
   assert len(image_data) % pixels_in_layer == 0
   layer_ranges = range(0, len(image_data), pixels_in_layer)
@@ -9,12 +9,34 @@ def get_input():
   return [int(c) for c in input_string]
 
 def count_digit(layer, digit):
-  return layer.count(digit)
+  return layer.count(str(digit))
+
+def merge_pixels(top_pixel, bottom_pixel):
+  if top_pixel == 2: #transparent
+    return bottom_pixel
+  else:
+    return top_pixel
+
+def merge_layers(top_layer, bottom_layer):
+  return [ merge_pixels(top_pixel, bottom_pixel) for (top_pixel, bottom_pixel) in zip(top_layer, bottom_layer)]
+
+def compute_image(layers, width):
+  from functools import reduce
+  effective_layers = reduce(merge_layers, layers)
+  return split_to_1d_layers(effective_layers, width, height=1)
+
+def render_image(image_for_rendering):
+  import numpy as np
+  import matplotlib.pyplot as plt
+  np_data = np.array(image_for_rendering)
+  plt.imshow(np_data)
+  plt.show()
 
 if __name__ == '__main__':
   input = get_input()
-  layers = split_to_layers(input, widht=25, height=6)
-  layer_with_min_zeros = min(layers, key=lambda layer: count_digit(layer, 0))
-  ones = count_digit(layer_with_min_zeros, 1)
-  twos = count_digit(layer_with_min_zeros, 2)
-  print(ones * twos)
+  width = 25
+  height = 6
+  layers = split_to_1d_layers(input, width, height)
+  image = compute_image(layers, width)
+  render_image(image)
+  
