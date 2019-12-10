@@ -44,10 +44,12 @@ def distance(a, b):
   return sqrt(x_delta ** 2 + y_delta ** 2)
 
 def relative_angle(source, dest):
-  (source_x, source_y) = source
-  (dest_x, dest_y) = dest
+  (x, y) = vector(source, dest)
   from math import atan2
-  return atan2(dest[1] - source[1], dest[0] - source[0])
+  return atan2(y, x)
+
+def vector(source, dest):
+  return tuple([d - s for (s, d) in zip(source, dest)])
   
 def point(row, col):
   return (row, col)
