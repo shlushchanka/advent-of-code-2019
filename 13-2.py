@@ -37,7 +37,7 @@ def paddle_direction(paddle_x, ball_x):
 if __name__ == '__main__':
   input = get_input()
   input[0] = 2
-  computer = IntCodeComputer(input, std_in=[], std_out=[])
+  computer = IntCodeComputer(input)
   computer.run()
   (coordinates, ball_x, paddle_x, last_score) = parse_output(computer.std_out)
   while computer.is_waiting_for_input:

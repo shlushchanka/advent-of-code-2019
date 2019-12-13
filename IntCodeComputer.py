@@ -31,7 +31,7 @@ class ReadMode(Enum):
 
 class IntCodeComputer:
 
-  def __init__(self, memory, std_in, std_out):
+  def __init__(self, memory, std_in=[], std_out=[]):
     self.memory = Memory(memory)
     self.std_in = std_in
     self.std_out = std_out
