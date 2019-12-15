@@ -45,16 +45,24 @@ def expand(recipe, fuel_quantity):
       need[chemical] = 0
   return need['ORE']  
 
+def binary_search_first_true(lo, f):
+  hi = lo * 2
+  while f(hi):
+    lo = hi
+    hi *= 2
+  while lo <= hi:
+    mid = lo + (hi - lo) // 2
+    if f(mid):
+      lo = mid + 1
+    else:
+      hi = mid - 1
+  return hi
+
 if __name__ == '__main__':
   recipe = get_input()
   ore_for_one_fuel = expand(recipe, 1)
   ore_available = 10 ** 12
   lo = ore_available // ore_for_one_fuel
-  hi = lo * 4
-  while lo <= hi:
-    mid = lo + (hi - lo) // 2
-    if expand(recipe, fuel_quantity=mid) <= ore_available:
-      lo = mid + 1
-    else:
-      hi = mid - 1
-  print(hi)
+  f = lambda fuel: expand(recipe, fuel) <= ore_available
+  max_possible = binary_search_first_true(lo, f)
+  print(max_possible)
