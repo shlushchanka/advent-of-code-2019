@@ -157,6 +157,30 @@ class IntCodeComputer:
   def halt(self, parameter_modes):
     self._is_halted = True
 
+  def read_int(self):
+    return self.std_out.pop(0)
+
+  def write_int(self, value):
+    self.std_in.append(value)
+
+  def read_char(self):
+    return ord(self.read_int())
+
+  def write_char(self, value):
+    write_int(self, ord(value))
+
+  def write_line(self, line):
+    for c in line:
+      self.write_char(c)
+    self.write_char('\n')
+
+  def read_line(self):
+    c = self.read_char()
+    read = []
+    while c != '\n':
+      read.append(c)
+    return ''.join(read)
+
   def parse_instruction(self, instruction):
     operation_code = instruction % 100
     instruction //= 100
