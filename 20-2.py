@@ -1,3 +1,5 @@
+from collections import deque
+
 def get_input():
   filename = '20.txt'
   lines = []
@@ -59,19 +61,25 @@ def position_mappings(portals):
     mappings[positions[1]] = positions[0]
   return mappings
 
+def init_bfs(start_position):
+  start_state = (start_position, 0)
+  steps = { start_state: 0 }
+  q = deque([start_state])
+  return (steps, q)
+
 def bfs(board, portals):
-  from collections import deque
-  initial_position = portals['AA'][0]
-  initial_state = (initial_position, 0)
+  start_position = portals['AA'][0]
+  (steps, q) = init_bfs(start_position)
   mappings = position_mappings(portals)
-  (outer, inner) = split_to_outer_and_inner(board, mappings, initial_position)
-  steps = { initial_state: 0 }
-  q = deque([initial_state])
+  (outer, inner) = split_to_outer_and_inner(board, mappings, start_position)
+  
   (row_count, col_count) = dimensions(board)
   isValid = lambda r, c: 0 <= r < row_count and 0 <= c < col_count
   directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-  finish_point = portals['ZZ'][0]
-  finish_state = (finish_point, 0)
+  finish_position = portals['ZZ'][0]
+  finish_state = (finish_position, 0)
+  outer.remove(finish_position)
+  outer.remove(start_position)
   while len(q) > 0 and finish_state not in steps:
     current_state = q.popleft()
     (current_position, current_level) = current_state
@@ -89,22 +97,16 @@ def bfs(board, portals):
 
     if not current_position in mappings:
       continue
-    if current_position in outer:
-      if current_position != initial_position and current_position != finish_point and current_level > 0:
-        to_position = mappings[current_position]
-        to_state = (to_position, current_level - 1)
-        if to_state not in steps:
-          steps[to_state] = next_steps
-          q.append(to_state)
-      elif current_state == finish_state:
-        steps[finish_state] = next_steps
-        return next_steps
-    elif current_position in inner:
-      to_position = mappings[current_position]
+    to_position = mappings[current_position]
+    if current_position in outer and current_level > 0:
+      to_state = (to_position, current_level - 1)
+    elif current_position in inner: 
       to_state = (to_position, current_level + 1)
-      if to_state not in steps:
-        steps[to_state] = next_steps
-        q.append(to_state)
+    else: 
+      continue
+    if to_state not in steps:
+      steps[to_state] = next_steps
+      q.append(to_state)
   assert finish_state in steps
   return steps[finish_state]      
 
