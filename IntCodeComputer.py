@@ -167,7 +167,7 @@ class IntCodeComputer:
     return ord(self.read_int())
 
   def write_char(self, value):
-    write_int(self, ord(value))
+    self.write_int(ord(value))
 
   def write_line(self, line):
     for c in line:
