@@ -156,15 +156,32 @@ class IntCodeComputer:
 
   def halt(self, parameter_modes):
     self._is_halted = True
-
+    
   def read_int(self):
     return self.std_out.pop(0)
+
+  def read_ints(self, at_most):
+    read = []
+    length = min(len(self.std_out), at_most)
+    for i in range(length):
+      read.append(self.read_int())
+    return read
+  
+  def read_char(self):
+    return ord(self.read_int())
 
   def write_int(self, value):
     self.std_in.append(value)
 
-  def read_char(self):
-    return ord(self.read_int())
+  def write_ints(self, values):
+    self.std_in.extend(values)
+
+  def read_line(self):
+    c = self.read_char()
+    read = []
+    while c != '\n':
+      read.append(c)
+    return ''.join(read)
 
   def write_char(self, value):
     self.write_int(ord(value))
@@ -173,13 +190,6 @@ class IntCodeComputer:
     for c in line:
       self.write_char(c)
     self.write_char('\n')
-
-  def read_line(self):
-    c = self.read_char()
-    read = []
-    while c != '\n':
-      read.append(c)
-    return ''.join(read)
 
   def parse_instruction(self, instruction):
     operation_code = instruction % 100

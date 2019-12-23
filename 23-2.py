@@ -14,12 +14,11 @@ def run(number_of_computers, program, nat_address):
         c.write_int(-1)
       c.run()
       while len(c.std_out) > 0:
-        (dest, x, y) = (c.read_int(), c.read_int(), c.read_int())
+        dest, *packet = c.read_ints(at_most=3)
         if dest == nat_address:
-          nat = [x, y]
+          nat = packet
         else:
-          computers[dest].write_int(x)
-          computers[dest].write_int(y)
+          computers[dest].write_ints(packet)
       if all([c.is_waiting_for_input and len(c.std_in) == 0 for c in computers]):
         counter += 1
       if counter == 2:
