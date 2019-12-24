@@ -15,6 +15,8 @@ FREE = '.'
 
 row_count = 5
 col_count = 5
+rec_row = 2
+rec_col = 2
 
 def mask(board):
   int_mask = 0
@@ -29,15 +31,15 @@ def mask(board):
 def bug_increment(symbol):
   return 1 if symbol == BUG else 0
 
-def count_adjacent_cells(levels, current_level, r, c, symbol):
+delta = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+def count_adjacent_bugs(levels, current_level, r, c,):
   board = levels[current_level]
-  delta = [(-1, 0), (0, 1), (1, 0), (0, -1)]
   count = 0
   for (d_row, d_col) in delta:
     (adj_row, adj_col) = (r + d_row, c + d_col)
     if adj_row < 0 or adj_row == row_count or adj_col < 0 or adj_col == col_count:
       count += count_rec_outer(levels[current_level - 1], d_row, d_col)
-    elif board[adj_row][adj_col] == '?':
+    elif adj_row == rec_row and adj_col == rec_col:
       count += count_rec_inner(levels[current_level + 1], d_row, d_col)
     else: 
       count += bug_increment(board[adj_row][adj_col])
@@ -70,19 +72,14 @@ def count_rec_inner(board, d_row, d_col):
 
 def iterate_game_of_life(levels, current_level):
   board = levels[current_level]
-  next = []
-  for r in range(row_count):
-    row = board[r].copy()
-    next.append(row)
+  next = empty_board()
   for r in range(row_count):
     for c in range(col_count):
-      bugs = count_adjacent_cells(levels, current_level, r, c, BUG)
-      if board[r][c] == BUG and bugs != 1:
-        next[r][c] = FREE
-      elif board[r][c] == FREE and 1 <= bugs <= 2:
+      if r == 2 and c == 2:
+        continue
+      bugs = count_adjacent_bugs(levels, current_level, r, c)
+      if (board[r][c] == BUG and bugs ==1) or (board[r][c] == FREE and 1 <= bugs <=2):
         next[r][c] = BUG
-      else: 
-        next[r][c] = board[r][c]
   return next
 
 def count_bugs_in_recursive_board(levels, minutes):
@@ -92,9 +89,6 @@ def count_bugs_in_recursive_board(levels, minutes):
       next_levels[current_level] = iterate_game_of_life(levels, current_level)
     levels = next_levels
 
-  for current_level in levels:
-    print("Depth " + str(current_level) + ":")
-    print_board(levels[current_level])
   return sum([count_bugs(levels[b]) for b in levels])
   
 def count_bugs(board):
@@ -103,10 +97,6 @@ def count_bugs(board):
     for c in range(col_count):
       count += bug_increment(board[r][c])
   return count
-
-def print_board(board):
-  for r in board:
-    print(''.join(r))
 
 def empty_board():
   return [
