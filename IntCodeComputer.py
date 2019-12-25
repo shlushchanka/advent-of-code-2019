@@ -168,7 +168,7 @@ class IntCodeComputer:
     return read
   
   def read_char(self):
-    return ord(self.read_int())
+    return chr(self.read_int())
 
   def write_int(self, value):
     self.std_in.append(value)
@@ -177,10 +177,11 @@ class IntCodeComputer:
     self.std_in.extend(values)
 
   def read_line(self):
-    c = self.read_char()
     read = []
+    c = self.read_char()
     while c != '\n':
       read.append(c)
+      c = self.read_char()
     return ''.join(read)
 
   def write_char(self, value):
